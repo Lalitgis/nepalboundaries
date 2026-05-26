@@ -1,8 +1,14 @@
-# geonepal - Administrative Boundaries of Nepal
+# nepalboundaries - Administrative Boundaries of Nepal
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R Package](https://img.shields.io/badge/R-ready-blue.svg)]()
 [![Python Package](https://img.shields.io/badge/Python-ready-blue.svg)]()
+
+<p align="center">
+  <img src="icon.png" width="180"/>
+</p>
+
+# nepalboundaries - Administrative Boundaries of Nepal
 
 A collection of geospatial packages (R and Python) providing easy access to administrative boundaries of Nepal at multiple levels: country, provincial, district, municipal, and ward.
 
@@ -23,14 +29,14 @@ Inspired by the excellent [rgeoboundaries](https://github.com/wmgeolab/rgeobound
 
 ```r
 # From GitHub
-remotes::install_github("Lalitgis/geonepal")
+remotes::install_github("Lalitgis/nepalboundaries")
 ```
 ## Quick Start
 
 ### R
 
 ```r
-library(geonepal)
+library(nepalboundaries)
 library(ggplot2)
 
 # Get all provinces
@@ -227,11 +233,11 @@ MIT License - See LICENSE file for details
 If you use this package in your research, please cite:
 
 ```bibtex
-@software{geonepal 2026,
-  title={geonepal: Administrative Boundaries of Nepal},
+@software{nepalboundaries 2026,
+  title={nepalboundaries: Administrative Boundaries of Nepal},
   author={Lalit BC},
   year={2026},
-  url={https://github.com/Lalitgis/geonepal}
+  url={https://github.com/Lalitgis/nepalboundaries}
 }
 ```
 
@@ -248,13 +254,13 @@ Contributions are welcome! Please:
 ## Issues and Support
 
 For bugs, feature requests, or questions, please open an issue on GitHub:
-[Issues](https://github.com/Lalitgis/geonepal/issues)
+[Issues](https://github.com/Lalitgis/nepalboundaries/issues)
 
 ## Inspiration
 
 This package is inspired by and follows the design principles of:
 - [rgeoboundaries](https://github.com/wmgeolab/rgeoboundaries) - Global administrative boundaries for R
-- [geobounds](https://dieghernan.github.io/geobounds/) - Alternative R implementation
+- [nepalboundaries](https://dieghernan.github.io/geobounds/) - Alternative R implementation
 
 ## Related Resources
 
