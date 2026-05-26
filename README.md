@@ -1,193 +1,270 @@
-# nepalboundaries - Administrative Boundaries of Nepal
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![R Package](https://img.shields.io/badge/R-ready-blue.svg)]()
-[![Python Package](https://img.shields.io/badge/Python-ready-blue.svg)]()
+# 🇳🇵 nepalboundaries  
+### Administrative Boundaries of Nepal for R & Python
 
 <p align="center">
   <img src="icon.png" width="180"/>
 </p>
 
-# nepalboundaries - Administrative Boundaries of Nepal
+<p align="center">
 
-A collection of geospatial packages (R and Python) providing easy access to administrative boundaries of Nepal at multiple levels: country, provincial, district, municipal, and ward.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![R Package](https://img.shields.io/badge/R-ready-blue.svg)]()
+[![Python Package](https://img.shields.io/badge/Python-ready-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-0.1.0-green.svg)]()
 
-Inspired by the excellent [rgeoboundaries](https://github.com/wmgeolab/rgeoboundaries) package but tailored specifically for Nepal with local data.
+</p>
 
-## Features
+---
 
-- **Multi-level administrative boundaries**: Country, Province, District, Municipality, Ward
-- **Easy filtering**: Get boundaries by name or geographic hierarchy
-- **Clean spatial data**: All boundaries standardized to WGS84 (EPSG:4326)
-- **Integrated analysis**: Works seamlessly with spatial analysis packages
-- **Multiple formats**: Supports GeoJSON, GeoPackage, and Shapefile formats
-- **Both R and Python**: Same functionality across two major data science languages
+`nepalboundaries` provides easy access to Nepal’s administrative boundary datasets at multiple levels including:
 
-## Installation
+- Country
+- Province
+- District
+- Municipality
+- Ward
 
-### R Package
+Built for spatial analysis, mapping, visualization, and geospatial workflows in **R** and **Python**.
+
+Inspired by the excellent [`rgeoboundaries`](https://github.com/wmgeolab/rgeoboundaries) project but focused specifically on Nepal with locally curated datasets.
+
+---
+
+# Features
+
+✅ Multi-level administrative boundaries  
+✅ Easy filtering by province, district, municipality, or ward  
+✅ Clean standardized spatial datasets  
+✅ WGS84 projection (EPSG:4326)  
+✅ Compatible with `sf`, `leaflet`, `ggplot2`, etc.  
+✅ Multiple export formats (GeoJSON, GPKG, Shapefile)  
+✅ Consistent API for both R and Python  
+
+---
+
+# Installation
+
+## R Package
 
 ```r
-# From GitHub
+# Install remotes if needed
+install.packages("remotes")
+
+# Install from GitHub
 remotes::install_github("Lalitgis/nepalboundaries")
 ```
-## Quick Start
 
-### R
+---
+
+# Quick Start
+
+## Load Packages
 
 ```r
 library(nepalboundaries)
 library(ggplot2)
+```
 
-# Get all provinces
+---
+
+## Provinces of Nepal
+
+```r
 provinces <- nb_province()
-provinces %>%
-  ggplot() +
+
+ggplot(provinces) +
   geom_sf(fill = "lightblue", color = "black") +
   geom_sf_label(aes(label = province_name)) +
   theme_minimal()
-
-# Get districts in Bagmati Province
-bagmati_districts <- nb_district(province = "Bagmati")
-plot(bagmati_districts)
-
-# Get wards in Kathmandu
-kathmandu_wards <- nb_ward(municipality = "Kathmandu")
 ```
 
-## Available Functions
+---
 
-### R Package
-
-| Function | Description |
-|----------|-------------|
-| `nb_country()` | Get Nepal's country boundary |
-| `nb_province(province = NULL)` | Get provincial boundaries |
-| `nb_district(district = NULL, province = NULL)` | Get district boundaries |
-| `nb_municipality(municipality = NULL, district = NULL, province = NULL)` | Get municipality boundaries |
-| `nb_ward(ward = NULL, municipality = NULL, district = NULL, province = NULL)` | Get ward boundaries |
-| `nb_get_multiple(levels = c("province", "district"))` | Get multiple levels at once |
-| `nb_summary(level = "district")` | Get summary information |
-
-## Data Structure
-
-The package includes standardized spatial data with the following administrative levels:
-
-```
-Nepal (Country)
-├── 7 Provinces
-│   ├── 77 Districts
-│   │   ├── 753 Municipalities + Protected Areas of Nepal
-│   │   │   └── ~6,743 Wards
-```
-
-### Column Names by Level
-
-#### Province
-- `province_name`: Name of the province
-- `province_code`: ISO/standard province code (if available)
-- `area_km2`: Area in square kilometers
-
-#### District
-- `district_name`: Name of the district
-- `district_code`: District code
-- `province_name`: Parent province name
-- `area_km2`: Area in square kilometers
-
-#### Municipality
-- `municipality_name`: Name of the municipality
-- `municipality_code`: Municipality code
-- `district_name`: Parent district name
-- `province_name`: Parent province name
-- `area_km2`: Area in square kilometers
-
-#### Ward
-- `ward_number`: Ward number (1-X)
-- `ward_name`: Ward name (if available)
-- `municipality_name`: Parent municipality name
-- `district_name`: Parent district name
-- `province_name`: Parent province name
-
-## Detailed Examples
-
-### R - Advanced Usage
+## Districts of Bagmati Province
 
 ```r
-library(nepalboundaries)
+bagmati <- nb_district(province = "Bagmati")
+
+plot(bagmati["district_name"])
+```
+
+---
+
+## Wards of Kathmandu
+
+```r
+kathmandu_wards <- nb_ward(
+  municipality = "Kathmandu"
+)
+```
+
+---
+
+# Administrative Structure
+
+```text
+Nepal
+├── 7 Provinces
+│   ├── 77 Districts
+│   │   ├── 753 Municipalities
+│   │   └── Protected Areas
+│   │       └── ~6,743 Wards
+```
+
+---
+
+# Available Functions
+
+| Function | Description |
+|---|---|
+| `nb_country()` | Nepal country boundary |
+| `nb_province()` | Provincial boundaries |
+| `nb_district()` | District boundaries |
+| `nb_municipality()` | Municipality boundaries |
+| `nb_ward()` | Ward boundaries |
+| `nb_get_multiple()` | Multiple administrative levels |
+| `nb_summary()` | Summary statistics |
+
+---
+
+# Filtering Examples
+
+## Get a Province
+
+```r
+nb_province(province = "Bagmati")
+```
+
+## Get Districts Within a Province
+
+```r
+nb_district(province = "Koshi")
+```
+
+## Get Municipalities Within a District
+
+```r
+nb_municipality(district = "Kathmandu")
+```
+
+## Get Wards Within a Municipality
+
+```r
+nb_ward(municipality = "Pokhara")
+```
+
+---
+
+# Advanced Spatial Analysis
+
+## Calculate District Areas
+
+```r
 library(sf)
 library(dplyr)
 
-# Get districts and calculate statistics
 districts <- nb_district() %>%
-  mutate(area_km2 = as.numeric(st_area(geometry)) / 1e6)
+  mutate(
+    area_km2 = as.numeric(st_area(geometry)) / 1e6
+  )
+```
 
-# Find the largest districts
-top_districts <- districts %>%
+---
+
+## Largest Districts
+
+```r
+largest <- districts %>%
   st_drop_geometry() %>%
   arrange(desc(area_km2)) %>%
   head(10)
+```
 
-# Spatial join to find which district contains a point
-point <- st_point(c(85.3240, 27.7172)) %>%  # Kathmandu
-  st_sfc(crs = 4326) %>%
+---
+
+## Spatial Join Example
+
+```r
+point <- st_point(c(85.3240, 27.7172)) %>% 
+  st_sfc(crs = 4326) %>% 
   st_as_sf()
 
-district_containing_point <- st_join(point, districts)
-
-# Find adjacent districts
-kathmandu <- districts[districts$district_name == "Kathmandu", ]
-adjacent <- districts[st_touches(kathmandu, districts, sparse = FALSE)[1, ], ]
+district <- st_join(point, districts)
 ```
 
-## Data Sources and Preparation
+---
 
-The package includes data prepared from official Nepal administrative boundary datasets. 
+## Adjacent Districts
 
-### Preparing Your Own Data
-
-If you want to rebuild the package with updated data:
-
-#### R
 ```r
-# Run the data preparation script
-source("data_preparation_R.R")
-# This will create RDS files in the data/ directory
+kathmandu <- districts[
+  districts$district_name == "Kathmandu", 
+]
+
+adjacent <- districts[
+  st_touches(kathmandu, districts, sparse = FALSE)[1, ],
+]
 ```
 
-## Coordinate Reference System
+---
 
-All data in this package uses the **WGS84 projection** (EPSG:4326, latitude/longitude).
+# Coordinate Reference System
 
-If you need a different projection, transform it using:
+All datasets use:
 
-**R:**
-```r
-districts_projected <- st_transform(districts, crs = 32645)  # UTM Zone 45N
+```text
+WGS84 (EPSG:4326)
 ```
 
+Transform to another CRS if needed:
 
-## Data Export
-
-### R
 ```r
-# Save as shapefile
+districts_utm <- st_transform(
+  districts,
+  crs = 32645
+)
+```
+
+---
+
+# Export Data
+
+## Shapefile
+
+```r
 st_write(districts, "nepal_districts.shp")
+```
 
-# Save as GeoJSON
-st_write(districts, "nepal_districts.geojson", driver = "GeoJSON")
+## GeoJSON
 
-# Save as GeoPackage
+```r
+st_write(
+  districts,
+  "nepal_districts.geojson",
+  driver = "GeoJSON"
+)
+```
+
+## GeoPackage
+
+```r
 st_write(districts, "nepal_districts.gpkg")
+```
 
-# Save as CSV (without geometry)
+## CSV
+
+```r
 districts %>%
   st_drop_geometry() %>%
   write.csv("nepal_districts.csv")
 ```
 
-## Interactive Visualization
+---
 
-### R - Using Leaflet
+# Interactive Mapping
+
+## Leaflet Example
+
 ```r
 library(leaflet)
 
@@ -201,39 +278,48 @@ leaflet(data = nb_district()) %>%
   )
 ```
 
+---
 
-## Package Structure
+# Repository Structure
 
-```
+```text
 nepalboundaries/
 ├── R/
-│   ├── DESCRIPTION           # Package metadata
-│   ├── NAMESPACE             # Package namespace
+│   ├── DESCRIPTION
+│   ├── NAMESPACE
 │   ├── R/
-│   │   └── functions.R       # Main functions
+│   │   └── functions.R
 │   ├── data/
 │   │   ├── country.rds
 │   │   ├── province.rds
 │   │   ├── district.rds
 │   │   ├── municipality.rds
 │   │   └── ward.rds
-│   ├── man/                  # Documentation
+│   ├── man/
 │   └── README.md
 │
 ├── README.md
 └── LICENSE
 ```
 
-## License
+---
 
-MIT License - See LICENSE file for details
+# Data Preparation
 
-## Citation
+To rebuild datasets:
 
-If you use this package in your research, please cite:
+```r
+source("data_preparation_R.R")
+```
+
+This generates processed `.rds` files inside the `data/` directory.
+
+---
+
+# Citation
 
 ```bibtex
-@software{nepalboundaries 2026,
+@software{nepalboundaries2026,
   title={nepalboundaries: Administrative Boundaries of Nepal},
   author={Lalit BC},
   year={2026},
@@ -241,40 +327,66 @@ If you use this package in your research, please cite:
 }
 ```
 
-## Contributing
+---
 
-Contributions are welcome! Please:
+# Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+Contributions are welcome.
+
+1. Fork the repository  
+2. Create a feature branch  
+
+```bash
+git checkout -b feature/amazing-feature
+```
+
+3. Commit changes  
+
+```bash
+git commit -m "Add amazing feature"
+```
+
+4. Push to GitHub  
+
+```bash
+git push origin feature/amazing-feature
+```
+
 5. Open a Pull Request
-
-## Issues and Support
-
-For bugs, feature requests, or questions, please open an issue on GitHub:
-[Issues](https://github.com/Lalitgis/nepalboundaries/issues)
-
-## Inspiration
-
-This package is inspired by and follows the design principles of:
-- [rgeoboundaries](https://github.com/wmgeolab/rgeoboundaries) - Global administrative boundaries for R
-- [nepalboundaries](https://dieghernan.github.io/geobounds/) - Alternative R implementation
-
-## Related Resources
-
-- [Nepal Central Bureau of Statistics](https://cbs.gov.np/)
-- [OpenStreetMap Nepal](https://wiki.openstreetmap.org/wiki/Nepal)
-- [HDX Nepal Data](https://data.humdata.org/dataset?tags=nepal)
-
-## Acknowledgments
-
-- Nepal administrative boundary data sources and contributors (Survey Department of Nepal)
-- The R geospatial communities
-- sf, geopandas, and related package developers
 
 ---
 
-**Last Updated**: 2026
-**Version**: 0.1.0
+# 🐞 Issues & Support
+
+Please report bugs or request features here:
+
+[GitHub Issues](https://github.com/Lalitgis/nepalboundaries/issues)
+
+---
+
+# Acknowledgments
+
+- Survey Department of Nepal  
+- Nepal administrative boundary contributors  
+- R geospatial community  
+- Developers of `sf`, `leaflet`, `ggplot2`, and related libraries  
+
+---
+
+# 🔗 Related Resources
+
+- [Nepal Central Bureau of Statistics](https://cbs.gov.np/)
+- [OpenStreetMap Nepal](https://wiki.openstreetmap.org/wiki/Nepal)
+- [Humanitarian Data Exchange Nepal](https://data.humdata.org/dataset?tags=nepal)
+
+---
+
+# License
+
+This project is licensed under the **MIT License**.
+
+---
+
+<p align="center">
+  Made with ❤️ for Nepal GIS & Spatial Analysis Community
+</p>
