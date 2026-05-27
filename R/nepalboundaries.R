@@ -2,7 +2,7 @@
 #'
 #' Retrieves the country boundary of Nepal.
 #'
-#' @return An sf object with Nepal's country boundary geometry
+#' @return An sf object containing Nepal's country boundary geometry.
 #'
 #' @examples
 #' \dontrun{
@@ -12,233 +12,338 @@
 #'
 #' @export
 nb_country <- function() {
-  # Load country boundary data
-  nepal_boundary <- load_nb_data("country")
-  return(nepal_boundary)
+  load_nb_data("country")
 }
+
 
 #' Get Nepal Provincial Boundaries
 #'
 #' Retrieves administrative boundaries for Nepal's provinces.
 #'
-#' @param province Character. Optional filter for specific province(s).
-#'                 If NULL, returns all provinces.
+#' @param province Character vector. Optional province name(s).
+#'   If NULL, all provinces are returned.
 #'
-#' @return An sf object with province boundaries
+#' @return An sf object containing province boundaries.
 #'
 #' @examples
 #' \dontrun{
 #'   # Get all provinces
 #'   provinces <- nb_province()
-#'   plot(provinces)
-#'   
-#'   # Get specific province
-#'   kathmandu <- nb_province("Bagmati")
+#'
+#'   # Get Bagmati Province
+#'   bagmati <- nb_province("Bagmati")
 #' }
 #'
 #' @export
 nb_province <- function(province = NULL) {
+
   prov_data <- load_nb_data("province")
-  
+
+  validate_columns(prov_data, "province_name")
+
   if (!is.null(province)) {
-    prov_data <- prov_data %>%
-      dplyr::filter(province_name %in% province)
-    
+
+    prov_data <- prov_data |>
+      dplyr::filter(
+        tolower(province_name) %in% tolower(province)
+      )
+
     if (nrow(prov_data) == 0) {
-      warning("No provinces found matching: ", paste(province, collapse = ", "))
+      warning(
+        "No provinces found matching: ",
+        paste(province, collapse = ", ")
+      )
     }
   }
-  
-  return(prov_data)
+
+  prov_data
 }
+
 
 #' Get Nepal District Boundaries
 #'
 #' Retrieves administrative boundaries for Nepal's districts.
 #'
-#' @param district Character. Optional filter for specific district(s).
-#' @param province Character. Optional filter for districts in specific province(s).
+#' @param district Character vector. Optional district name(s).
+#' @param province Character vector. Optional province name(s).
 #'
-#' @return An sf object with district boundaries
+#' @return An sf object containing district boundaries.
 #'
 #' @examples
 #' \dontrun{
 #'   # Get all districts
 #'   districts <- nb_district()
-#'   
-#'   # Get specific district
+#'
+#'   # Get Bhaktapur district
 #'   bhaktapur <- nb_district("Bhaktapur")
-#'   
-#'   # Get districts in a province
+#'
+#'   # Get districts within Bagmati Province
 #'   bagmati_districts <- nb_district(province = "Bagmati")
 #' }
 #'
 #' @export
 nb_district <- function(district = NULL, province = NULL) {
+
   dist_data <- load_nb_data("district")
-  
+
+  validate_columns(
+    dist_data,
+    c("province_name", "district_name")
+  )
+
   if (!is.null(province)) {
-    dist_data <- dist_data %>%
-      dplyr::filter(province_name %in% province)
+
+    dist_data <- dist_data |>
+      dplyr::filter(
+        tolower(province_name) %in% tolower(province)
+      )
   }
-  
+
   if (!is.null(district)) {
-    dist_data <- dist_data %>%
-      dplyr::filter(district_name %in% district)
-    
+
+    dist_data <- dist_data |>
+      dplyr::filter(
+        tolower(district_name) %in% tolower(district)
+      )
+
     if (nrow(dist_data) == 0) {
-      warning("No districts found matching criteria")
+      warning("No districts found matching criteria.")
     }
   }
-  
-  return(dist_data)
+
+  dist_data
 }
+
 
 #' Get Nepal Municipal Boundaries
 #'
 #' Retrieves administrative boundaries for Nepal's municipalities.
 #'
-#' @param municipality Character. Optional filter for specific municipality/ies.
-#' @param district Character. Optional filter for municipalities in specific district(s).
-#' @param province Character. Optional filter for municipalities in specific province(s).
+#' @param municipality Character vector. Optional municipality name(s).
+#' @param district Character vector. Optional district name(s).
+#' @param province Character vector. Optional province name(s).
 #'
-#' @return An sf object with municipality boundaries
+#' @return An sf object containing municipality boundaries.
 #'
 #' @examples
 #' \dontrun{
 #'   # Get all municipalities
 #'   municipalities <- nb_municipality()
-#'   
-#'   # Get specific municipality
+#'
+#'   # Get Kathmandu Metropolitan City
 #'   kathmandu <- nb_municipality("Kathmandu")
-#'   
-#'   # Get municipalities in a district
-#'   bhaktapur_municipalities <- nb_municipality(district = "Bhaktapur")
+#'
+#'   # Get municipalities within Bhaktapur district
+#'   bhaktapur_mun <- nb_municipality(district = "Bhaktapur")
 #' }
 #'
 #' @export
-nb_municipality <- function(municipality = NULL, district = NULL, province = NULL) {
+nb_municipality <- function(
+    municipality = NULL,
+    district = NULL,
+    province = NULL
+) {
+
   mun_data <- load_nb_data("municipality")
-  
+
+  validate_columns(
+    mun_data,
+    c(
+      "province_name",
+      "district_name",
+      "municipality_name"
+    )
+  )
+
   if (!is.null(province)) {
-    mun_data <- mun_data %>%
-      dplyr::filter(province_name %in% province)
+
+    mun_data <- mun_data |>
+      dplyr::filter(
+        tolower(province_name) %in% tolower(province)
+      )
   }
-  
+
   if (!is.null(district)) {
-    mun_data <- mun_data %>%
-      dplyr::filter(district_name %in% district)
+
+    mun_data <- mun_data |>
+      dplyr::filter(
+        tolower(district_name) %in% tolower(district)
+      )
   }
-  
+
   if (!is.null(municipality)) {
-    mun_data <- mun_data %>%
-      dplyr::filter(municipality_name %in% municipality)
-    
+
+    mun_data <- mun_data |>
+      dplyr::filter(
+        tolower(municipality_name) %in% tolower(municipality)
+      )
+
     if (nrow(mun_data) == 0) {
-      warning("No municipalities found matching criteria")
+      warning("No municipalities found matching criteria.")
     }
   }
-  
-  return(mun_data)
+
+  mun_data
 }
+
 
 #' Get Nepal Ward Boundaries
 #'
 #' Retrieves administrative boundaries for Nepal's wards.
 #'
-#' @param ward Character. Optional filter for specific ward(s).
-#' @param municipality Character. Optional filter for wards in specific municipality/ies.
-#' @param district Character. Optional filter for wards in specific district(s).
-#' @param province Character. Optional filter for wards in specific province(s).
+#' @param ward Numeric or character vector. Optional ward number(s).
+#' @param municipality Character vector. Optional municipality name(s).
+#' @param district Character vector. Optional district name(s).
+#' @param province Character vector. Optional province name(s).
 #'
-#' @return An sf object with ward boundaries
+#' @return An sf object containing ward boundaries.
 #'
 #' @examples
 #' \dontrun{
 #'   # Get all wards
 #'   wards <- nb_ward()
-#'   
-#'   # Get wards in a municipality
+#'
+#'   # Get wards within Kathmandu
 #'   kathmandu_wards <- nb_ward(municipality = "Kathmandu")
-#'   
-#'   # Get specific ward
-#'   ward_1 <- nb_ward(ward = "1", municipality = "Kathmandu")
+#'
+#'   # Get Ward 1 of Kathmandu
+#'   ward_1 <- nb_ward(
+#'     ward = 1,
+#'     municipality = "Kathmandu"
+#'   )
 #' }
 #'
 #' @export
-nb_ward <- function(ward = NULL, municipality = NULL, district = NULL, province = NULL) {
+nb_ward <- function(
+    ward = NULL,
+    municipality = NULL,
+    district = NULL,
+    province = NULL
+) {
+
   ward_data <- load_nb_data("ward")
-  
+
+  validate_columns(
+    ward_data,
+    c(
+      "province_name",
+      "district_name",
+      "municipality_name",
+      "ward_number"
+    )
+  )
+
   if (!is.null(province)) {
-    ward_data <- ward_data %>%
-      dplyr::filter(province_name %in% province)
+
+    ward_data <- ward_data |>
+      dplyr::filter(
+        tolower(province_name) %in% tolower(province)
+      )
   }
-  
+
   if (!is.null(district)) {
-    ward_data <- ward_data %>%
-      dplyr::filter(district_name %in% district)
+
+    ward_data <- ward_data |>
+      dplyr::filter(
+        tolower(district_name) %in% tolower(district)
+      )
   }
-  
+
   if (!is.null(municipality)) {
-    ward_data <- ward_data %>%
-      dplyr::filter(municipality_name %in% municipality)
+
+    ward_data <- ward_data |>
+      dplyr::filter(
+        tolower(municipality_name) %in% tolower(municipality)
+      )
   }
-  
+
   if (!is.null(ward)) {
-    ward_data <- ward_data %>%
-      dplyr::filter(ward_number %in% ward)
-    
+
+    ward_data <- ward_data |>
+      dplyr::filter(
+        as.character(ward_number) %in%
+          as.character(ward)
+      )
+
     if (nrow(ward_data) == 0) {
-      warning("No wards found matching criteria")
+      warning("No wards found matching criteria.")
     }
   }
-  
-  return(ward_data)
+
+  ward_data
 }
+
 
 #' Get Multiple Administrative Levels
 #'
-#' Retrieves boundaries for multiple administrative levels at once.
+#' Retrieves multiple administrative boundary levels at once.
 #'
-#' @param levels Character vector. Specify which levels to retrieve.
-#'                Options: "country", "province", "district", "municipality", "ward"
+#' @param levels Character vector specifying administrative levels.
+#'   Options:
+#'   "country", "province", "district",
+#'   "municipality", "ward"
 #'
-#' @return A list of sf objects, one for each requested level
+#' @return A named list of sf objects.
 #'
 #' @examples
 #' \dontrun{
-#'   boundaries <- nb_get_multiple(c("province", "district"))
+#'   boundaries <- nb_get_multiple(
+#'     c("province", "district")
+#'   )
 #' }
 #'
 #' @export
-nb_get_multiple <- function(levels = c("province", "district")) {
-  valid_levels <- c("country", "province", "district", "municipality", "ward")
-  
+nb_get_multiple <- function(
+    levels = c("province", "district")
+) {
+
+  valid_levels <- c(
+    "country",
+    "province",
+    "district",
+    "municipality",
+    "ward"
+  )
+
   if (!all(levels %in% valid_levels)) {
-    stop("Invalid level. Valid options are: ", paste(valid_levels, collapse = ", "))
+
+    stop(
+      "Invalid level(s). Valid options are: ",
+      paste(valid_levels, collapse = ", ")
+    )
   }
-  
+
   result <- list()
-  
+
   for (level in levels) {
-    result[[level]] <- switch(level,
-                             "country" = nb_country(),
-                             "province" = nb_province(),
-                             "district" = nb_district(),
-                             "municipality" = nb_municipality(),
-                             "ward" = nb_ward())
+
+    result[[level]] <- switch(
+      level,
+
+      country = nb_country(),
+
+      province = nb_province(),
+
+      district = nb_district(),
+
+      municipality = nb_municipality(),
+
+      ward = nb_ward()
+    )
   }
-  
-  return(result)
+
+  result
 }
 
-#' Get Summary Information about Nepal Boundaries
+
+#' Get Summary Information About Nepal Boundaries
 #'
-#' Provides summary statistics about administrative divisions in Nepal.
+#' Provides summary statistics for a selected
+#' administrative boundary level.
 #'
-#' @param level Character. The administrative level to summarize.
+#' @param level Character. Administrative level.
 #'
-#' @return A data frame with summary information
+#' @return A data frame containing summary information.
 #'
 #' @examples
 #' \dontrun{
@@ -248,72 +353,200 @@ nb_get_multiple <- function(levels = c("province", "district")) {
 #'
 #' @export
 nb_summary <- function(level = "district") {
-  valid_levels <- c("province", "district", "municipality", "ward")
-  
-  if (!level %in% valid_levels) {
-    stop("Invalid level. Valid options are: ", paste(valid_levels, collapse = ", "))
-  }
-  
+
+  valid_levels <- c(
+    "province",
+    "district",
+    "municipality",
+    "ward"
+  )
+
+  level <- match.arg(level, valid_levels)
+
   data <- load_nb_data(level)
-  
-  # Remove geometry column for summary
+
   data_summary <- sf::st_drop_geometry(data)
-  
+
   summary_stats <- data.frame(
     level = level,
     total_features = nrow(data),
-    columns = paste(names(data_summary), collapse = ", ")
+    total_columns = ncol(data_summary),
+    crs_epsg = sf::st_crs(data)$epsg,
+    column_names = paste(
+      names(data_summary),
+      collapse = ", "
+    )
   )
-  
-  return(summary_stats)
+
+  summary_stats
 }
 
+
 #' Get Province Headquarters
-#' @param province Optional province name(s)
+#'
+#' Retrieves province headquarters locations.
+#'
+#' @param province Character vector.
+#'   Optional province name(s).
+#'
+#' @return An sf object containing province headquarters.
+#'
+#' @examples
+#' \dontrun{
+#'   hq <- nb_province_headquarters()
+#'   bagmati_hq <- nb_province_headquarters("Bagmati")
+#' }
+#'
 #' @export
-nb_province_headquarters <- function(province = NULL) {
-  data <- readRDS(system.file("data", "province_headquarters.rds", 
-                              package = "nepalboundaries"))
+nb_province_headquarters <- function(
+    province = NULL
+) {
+
+  data <- readRDS(
+    system.file(
+      "data",
+      "province_headquarters.rds",
+      package = "nepalboundaries"
+    )
+  )
+
+  validate_columns(data, "province_name")
+
   if (!is.null(province)) {
-    data <- data %>% dplyr::filter(province_name %in% province)
+
+    data <- data |>
+      dplyr::filter(
+        tolower(province_name) %in%
+          tolower(province)
+      )
   }
-  return(data)
+
+  data
 }
 
 
 #' Get District Headquarters
-#' @param district Optional district name(s)
-#' @param province Optional province name(s)
+#'
+#' Retrieves district headquarters locations.
+#'
+#' @param district Character vector.
+#'   Optional district name(s).
+#' @param province Character vector.
+#'   Optional province name(s).
+#'
+#' @return An sf object containing district headquarters.
+#'
+#' @examples
+#' \dontrun{
+#'   district_hq <- nb_district_headquarters()
+#'   bhaktapur_hq <- nb_district_headquarters(
+#'     district = "Bhaktapur"
+#'   )
+#' }
+#'
 #' @export
-nb_district_headquarters <- function(district = NULL, province = NULL) {
-  data <- readRDS(system.file("data", "district_headquarters.rds", 
-                              package = "nepalboundaries"))
+nb_district_headquarters <- function(
+    district = NULL,
+    province = NULL
+) {
+
+  data <- readRDS(
+    system.file(
+      "data",
+      "district_headquarters.rds",
+      package = "nepalboundaries"
+    )
+  )
+
+  validate_columns(
+    data,
+    c("province_name", "district_name")
+  )
+
   if (!is.null(province)) {
-    data <- data %>% dplyr::filter(province_name %in% province)
+
+    data <- data |>
+      dplyr::filter(
+        tolower(province_name) %in%
+          tolower(province)
+      )
   }
+
   if (!is.null(district)) {
-    data <- data %>% dplyr::filter(district_name %in% district)
+
+    data <- data |>
+      dplyr::filter(
+        tolower(district_name) %in%
+          tolower(district)
+      )
   }
-  return(data)
+
+  data
 }
 
-#' Internal function to load data
+
+#' Internal Function to Load Nepal Boundary Data
 #'
-#' @param level Administrative level
+#' @param level Character. Administrative level.
+#'
+#' @return An sf object.
 #'
 #' @keywords internal
 load_nb_data <- function(level) {
-  # Try to load from system.file (data bundled with package)
-  data_path <- system.file("data", paste0(level, ".rds"), package = "nepalboundaries")
-  
-  if (file.exists(data_path)) {
+
+  data_path <- system.file(
+    "data",
+    paste0(level, ".rds"),
+    package = "nepalboundaries"
+  )
+
+  if (nzchar(data_path)) {
     return(readRDS(data_path))
   }
-  
-  # Alternative: load from package data objects if pre-loaded
+
   tryCatch({
-    return(get(paste0("nepal_", level), envir = asNamespace("nepalboundaries")))
+
+    get(
+      paste0("nepal_", level),
+      envir = asNamespace("nepalboundaries")
+    )
+
   }, error = function(e) {
-    stop("Data for ", level, " not found. Please ensure data files are properly installed.")
+
+    stop(
+      "Data for '",
+      level,
+      "' not found. ",
+      "Please ensure package data files are installed correctly."
+    )
   })
+}
+
+
+#' Validate Required Columns
+#'
+#' Internal helper function used to validate
+#' required dataset columns.
+#'
+#' @param data Data frame or sf object.
+#' @param required_cols Character vector of required columns.
+#'
+#' @keywords internal
+validate_columns <- function(
+    data,
+    required_cols
+) {
+
+  missing_cols <- setdiff(
+    required_cols,
+    names(data)
+  )
+
+  if (length(missing_cols) > 0) {
+
+    stop(
+      "Missing required column(s): ",
+      paste(missing_cols, collapse = ", ")
+    )
+  }
 }
