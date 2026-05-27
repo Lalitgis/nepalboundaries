@@ -268,6 +268,35 @@ nb_summary <- function(level = "district") {
   return(summary_stats)
 }
 
+#' Get Province Headquarters
+#' @param province Optional province name(s)
+#' @export
+nb_province_headquarters <- function(province = NULL) {
+  data <- readRDS(system.file("data", "province_headquarters.rds", 
+                              package = "nepalboundaries"))
+  if (!is.null(province)) {
+    data <- data %>% dplyr::filter(province_name %in% province)
+  }
+  return(data)
+}
+
+
+#' Get District Headquarters
+#' @param district Optional district name(s)
+#' @param province Optional province name(s)
+#' @export
+nb_district_headquarters <- function(district = NULL, province = NULL) {
+  data <- readRDS(system.file("data", "district_headquarters.rds", 
+                              package = "nepalboundaries"))
+  if (!is.null(province)) {
+    data <- data %>% dplyr::filter(province_name %in% province)
+  }
+  if (!is.null(district)) {
+    data <- data %>% dplyr::filter(district_name %in% district)
+  }
+  return(data)
+}
+
 #' Internal function to load data
 #'
 #' @param level Administrative level
