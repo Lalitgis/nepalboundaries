@@ -499,10 +499,14 @@ load_nb_data <- function(level) {
     paste0(level, ".rds"),
     package = "nepalboundaries"
   )
-
-  if (nzchar(data_path)) {
-    return(readRDS(data_path))
-  }
+if (nzchar(data_path)) {
+  return(
+    standardize_nb_columns(
+      readRDS(data_path),
+      level
+    )
+  )
+}
 
   tryCatch({
 
@@ -524,7 +528,41 @@ load_nb_data <- function(level) {
   })
 }
 
+standardize_nb_columns <- function(data, level) {
+  rename_if_present <- function(data, from, to) {
+    if (!to %in% names(data) && from %in% names(data)) {
+      names(data)[names(data) == from] <- to
+    }
+    data
+  }
 
+  switch(
+    level,
+    province = {
+      data <- rename_if_present(data, "Province", "province_name")
+      data <- rename_if_present(data, "Province_No", "province_code")
+      data
+    },
+    district = {
+      data <- rename_if_present(data, "Provinces", "province_name")
+      data <- rename_if_present(data, "Districts", "district_name")
+      data
+    },
+    municipality = {
+      data <- rename_if_present(data, "Province", "province_name")
+      data <- rename_if_present(data, "District", "district_name")
+      data <- rename_if_present(data, "Municipal", "municipality_name")
+      data
+    },
+    ward = {
+      data <- rename_if_present(data, "District", "district_name")
+      data <- rename_if_present(data, "Name", "municipality_name")
+      data <- rename_if_present(data, "Ward.Number", "ward_number")
+      data
+    },
+    data
+  )
+}
 #' Validate Required Columns
 #'
 #' Internal helper function used to validate
