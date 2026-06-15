@@ -398,32 +398,34 @@ nb_summary <- function(level = "district") {
 #' }
 #'
 #' @export
-nb_province_headquarters <- function(
-    province = NULL
+nb_district_headquarters <- function(
+    district = NULL
 ) {
 
   data <- readRDS(
     system.file(
       "data",
-      "province_headquarters.rds",
+      "dist_hq.rds",
       package = "nepalboundaries"
     )
   )
 
-  validate_columns(data, "province_name")
+  if (!"district_name" %in% names(data) && "Name" %in% names(data)) {
+    names(data)[names(data) == "Name"] <- "district_name"
+  }
 
-  if (!is.null(province)) {
+  validate_columns(data, "district_name")
 
+  if (!is.null(district)) {
     data <- data |>
       dplyr::filter(
-        tolower(province_name) %in%
-          tolower(province)
+        tolower(district_name) %in%
+          tolower(district)
       )
   }
 
   data
 }
-
 
 #' Get District Headquarters
 #'
