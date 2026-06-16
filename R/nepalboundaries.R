@@ -369,6 +369,47 @@ nb_summary <- function(level = "district") {
 
   data_summary <- sf::st_drop_geometry(data)
 
+  # -----------------------------
+  # SPECIAL CASE: NATIONAL PARKS
+  # -----------------------------
+  if (level == "nationalpark") {
+
+    # standardize name column if needed
+    if (!"park_name" %in% names(data_summary) && "NAME" %in% names(data_summary)) {
+      names(data_summary)[names(data_summary) == "NAME"] <- "park_name"
+    }
+
+    summary_stats <- data.frame(
+      level = level,
+      total_features = nrow(data_summary),
+      total_columns = ncol(data_summary),
+      crs_epsg = sf::st_crs(data)$epsg,
+      
+      # WDPA-specific metrics (important for research papers)
+      iucn_categories = if ("IUCN_CAT" %in% names(data_summary)) {
+        paste(unique(data_summary$IUCN_CAT), collapse = ", ")
+      } else {
+        NA
+      },
+
+      governance_types = if ("GOV_TYPE" %in% names(data_summary)) {
+        paste(unique(data_summary$GOV_TYPE), collapse = ", ")
+      } else {
+        NA
+      },
+
+      designation_types = if ("DESIG_ENG" %in% names(data_summary)) {
+        paste(unique(data_summary$DESIG_ENG), collapse = ", ")
+      } else {
+        NA
+      },
+
+      column_names = paste(names(data_summary), collapse = ", ")
+    )
+
+    return(summary_stats)
+  }
+
   summary_stats <- data.frame(
     level = level,
     total_features = nrow(data),
