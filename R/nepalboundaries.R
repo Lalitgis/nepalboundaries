@@ -469,6 +469,45 @@ nb_province_headquarters <- function(province = NULL) {
 
   data
 }
+#' Get Nepal National Park Boundaries
+#'
+#' Retrieves national park boundaries of Nepal.
+#'
+#' @param park Character vector. Optional national park name(s).
+#'   If NULL, all national parks are returned.
+#'
+#' @return An sf object containing national park boundaries.
+#'
+#' @examples
+#' \dontrun{
+#'   parks <- nb_nationalpark()
+#'   chitwan <- nb_nationalpark("Chitwan National Park")
+#' }
+#'
+#' @export
+nb_nationalpark <- function(park = NULL) {
+
+  park_data <- load_nb_data("nationalpark")
+
+  validate_columns(
+    park_data,
+    c("NAME")  # change if your column name differs
+  )
+
+  if (!is.null(park)) {
+
+    park_data <- park_data |>
+      dplyr::filter(
+        tolower(park_name) %in% tolower(park)
+      )
+
+    if (nrow(park_data) == 0) {
+      warning("No national parks found matching criteria.")
+    }
+  }
+
+  park_data
+}
 
 #' Internal Function to Load Nepal Boundary Data
 #'
