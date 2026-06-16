@@ -381,52 +381,6 @@ nb_summary <- function(level = "district") {
   summary_stats
 }
 
-
-#' Get Province Headquarters
-#'
-#' Retrieves province headquarters locations.
-#'
-#' @param province Character vector.
-#'   Optional province name(s).
-#'
-#' @return An sf object containing province headquarters.
-#'
-#' @examples
-#' \dontrun{
-#'   hq <- nb_province_headquarters()
-#'   bagmati_hq <- nb_province_headquarters("Bagmati")
-#' }
-#'
-#' @export
-nb_district_headquarters <- function(
-    district = NULL
-) {
-
-  data <- readRDS(
-    system.file(
-      "data",
-      "dist_hq.rds",
-      package = "nepalboundaries"
-    )
-  )
-
-  if (!"district_name" %in% names(data) && "Name" %in% names(data)) {
-    names(data)[names(data) == "Name"] <- "district_name"
-  }
-
-  validate_columns(data, "district_name")
-
-  if (!is.null(district)) {
-    data <- data |>
-      dplyr::filter(
-        tolower(district_name) %in%
-          tolower(district)
-      )
-  }
-
-  data
-}
-
 #' Get District Headquarters
 #'
 #' Retrieves district headquarters locations.
