@@ -355,11 +355,11 @@ nb_get_multiple <- function(
 nb_summary <- function(level = "district") {
 
   valid_levels <- c(
-    "country"
+    "country",
     "province",
     "district",
     "municipality",
-    "ward"
+    "ward",
     "nationalpark"
   )
 
