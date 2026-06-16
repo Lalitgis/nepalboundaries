@@ -302,7 +302,8 @@ nb_get_multiple <- function(
     "province",
     "district",
     "municipality",
-    "ward"
+    "ward",
+    "nationalpark"
   )
 
   if (!all(levels %in% valid_levels)) {
@@ -328,7 +329,9 @@ nb_get_multiple <- function(
 
       municipality = nb_municipality(),
 
-      ward = nb_ward()
+      ward = nb_ward(),
+
+      nationalpark = nb_nationalpark()
     )
   }
 
