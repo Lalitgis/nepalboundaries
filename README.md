@@ -23,6 +23,9 @@
 - District
 - Municipality
 - Ward
+- Distirct headquarter
+- Province headquarter
+- Protected Areas and National Park of Nepal (coming soon)
 
 Built for spatial analysis, mapping, visualization, and geospatial workflows in **R** and **Python**.
 
