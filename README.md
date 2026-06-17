@@ -1,5 +1,5 @@
 # 🇳🇵 nepalboundaries  
-### Administrative Boundaries of Nepal for R & Python
+### Administrative Boundaries of Nepal for R 
 
 <p align="center">
   <img src="icon.png" width="180"/>
@@ -25,7 +25,7 @@
 - Ward
 - Distirct headquarter
 - Province headquarter
-- Protected Areas and National Park of Nepal (coming soon)
+- Protected Areas and National Park of Nepal 
 
 Built for spatial analysis, mapping, visualization, and geospatial workflows in **R** and **Python**.
 
@@ -125,6 +125,7 @@ Nepal
 | `nb_district()` | District boundaries |
 | `nb_municipality()` | Municipality boundaries |
 | `nb_ward()` | Ward boundaries |
+| `nb_nationalpark()` | National Park and Protected Areas boundaries |
 | `nb_get_multiple()` | Multiple administrative levels |
 | `nb_summary()` | Summary statistics |
 
@@ -391,5 +392,5 @@ This project is licensed under the **MIT License**.
 ---
 
 <p align="center">
-  Made with ❤️ for Nepal GIS & Spatial Analysis Community
+  Made with ❤️ for Nepal's GIS & Spatial Analysis Community
 </p>
