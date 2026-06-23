@@ -18,7 +18,7 @@
 
 `nepalboundaries` provides easy access to Nepal’s administrative boundary datasets at multiple levels including:
 
-- Country
+- Country - National Boundary
 - Province
 - District
 - Municipality
